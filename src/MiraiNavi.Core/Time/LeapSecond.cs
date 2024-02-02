@@ -4,7 +4,7 @@ public static class LeapSecond
 {
     #region Public Methods
 
-    public static int GetLeapSecondCount(this DateTimeOffset date) => _leapSecondDates.Count(d => d <= date);
+    public static int GetLeapSecondCount(DateTimeOffset date) => _leapSecondDates.Count(d => d <= date);
 
     public static DateTimeOffset GetLeapSecondDate(int count)
     {
@@ -13,7 +13,7 @@ public static class LeapSecond
         return _leapSecondDates[count - 1];
     }
 
-    public static TimeSpan GetLeapSecondOffset(this DateTimeOffset date) => TimeSpan.FromSeconds(GetLeapSecondCount(date));
+    public static TimeSpan GetLeapSecondOffset(DateTimeOffset date) => TimeSpan.FromSeconds(GetLeapSecondCount(date));
 
     #endregion Public Methods
 
@@ -21,7 +21,7 @@ public static class LeapSecond
 
     internal static readonly DateTimeOffset[] _leapSecondDates =
                 [
-        new(1972, 7, 1, 0, 0, 0, TimeSpan.Zero),
+                    new(1972, 7, 1, 0, 0, 0, TimeSpan.Zero),
                     new(1973, 1, 1, 0, 0, 0, TimeSpan.Zero),
                     new(1974, 1, 1, 0, 0, 0, TimeSpan.Zero),
                     new(1975, 1, 1, 0, 0, 0, TimeSpan.Zero),

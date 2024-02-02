@@ -12,7 +12,7 @@ public static class TimeConverters
         return GpsTime.StartDate + gpsTime.DurationSinceStartDate - leapSecondOffset + _startDateLeapSecondOffset;
     }
 
-    public static GpsTime ToGpsTime(this DateTimeOffset dateTimeOffset) => new(dateTimeOffset - GpsTime.StartDate + dateTimeOffset.GetLeapSecondOffset() - _startDateLeapSecondOffset);
+    public static GpsTime ToGpsTime(this DateTimeOffset dateTimeOffset) => new(dateTimeOffset - GpsTime.StartDate + LeapSecond.GetLeapSecondOffset(dateTimeOffset) - _startDateLeapSecondOffset);
 
     #endregion Public Methods
 
