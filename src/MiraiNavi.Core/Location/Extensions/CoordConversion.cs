@@ -2,7 +2,7 @@
 
 namespace MiraiNavi.Location;
 
-public static class CoordConversions
+public static class CoordConversion
 {
     #region Public Methods
 

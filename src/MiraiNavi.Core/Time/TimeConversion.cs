@@ -2,7 +2,7 @@
 
 namespace MiraiNavi.Time;
 
-public static class TimeConverters
+public static class TimeConversion
 {
     #region Public Methods
 

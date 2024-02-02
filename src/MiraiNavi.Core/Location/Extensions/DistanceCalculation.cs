@@ -4,7 +4,7 @@ using static MiraiNavi.Angle;
 
 namespace MiraiNavi.Location;
 
-public static class DistanceCalculators
+public static class DistanceCalculation
 {
     #region Public Methods
 
