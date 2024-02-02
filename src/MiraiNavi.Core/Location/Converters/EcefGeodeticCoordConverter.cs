@@ -1,10 +1,32 @@
 ﻿using MiraiNavi.Location.Contracts;
 using static System.Double;
 
-namespace MiraiNavi.Location.Converters;
+namespace MiraiNavi.Location;
 
 public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverter<EcefCoord, GeodeticCoord>
 {
+    #region Public Properties
+
+    public EarthEllipsoid Ellipsoid { get; }
+
+    #endregion Public Properties
+
+    #region Public Methods
+
+    /// <summary>
+    /// Gets an instance of <see cref="EcefGeodeticCoordConverter"/> with the specified <see cref="EarthEllipsoid"/>.If the instance already exists, it will be returned from the cache.
+    /// </summary>
+    /// <param name="ellipsoid">The specified ellipsoid. The converter will use the parameters of it to convert coordinates.</param>
+    /// <returns></returns>
+    public static EcefGeodeticCoordConverter Create(EarthEllipsoid ellipsoid)
+    {
+        if(_convertersCache.TryGetValue(ellipsoid, out var converter))
+            return converter;
+        converter = new(ellipsoid);
+        _convertersCache[ellipsoid] = converter;
+        return converter;
+    }
+
     public static (double B, double L, double H) FromEcefToGeodetic(double x, double y, double z, double a, double b)
     {
         var L = Atan2(y, x);
@@ -49,29 +71,6 @@ public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverte
         return (x, y, z);
     }
 
-    readonly static Dictionary<EarthEllipsoid, EcefGeodeticCoordConverter> _convertersCache = [];
-
-    EcefGeodeticCoordConverter(EarthEllipsoid ellipsoid)
-    {
-        Ellipsoid = ellipsoid;
-    }
-
-    /// <summary>
-    /// Gets an instance of <see cref="EcefGeodeticCoordConverter"/> with the specified <see cref="EarthEllipsoid"/>.If the instance already exists, it will be returned from the cache.
-    /// </summary>
-    /// <param name="ellipsoid">The specified ellipsoid. The converter will use the parameters of it to convert coordinates.</param>
-    /// <returns></returns>
-    public static EcefGeodeticCoordConverter Create(EarthEllipsoid ellipsoid)
-    {
-        if(_convertersCache.TryGetValue(ellipsoid, out var converter))
-            return converter;
-        converter = new(ellipsoid);
-        _convertersCache[ellipsoid] = converter;
-        return converter;
-    }
-
-    public EarthEllipsoid Ellipsoid { get; }
-
     public GeodeticCoord FromCartesionToGeodetic(EcefCoord ecef)
     {
         var (b, l, h) = FromEcefToGeodetic(ecef.X, ecef.Y, ecef.Z, Ellipsoid.A, Ellipsoid.B);
@@ -83,4 +82,21 @@ public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverte
         var (x, y, z) = FromGeodeticToEcef(geodetic.B, geodetic.L, geodetic.H, Ellipsoid.A, Ellipsoid.B);
         return new(x, y, z);
     }
+
+    #endregion Public Methods
+
+    #region Private Fields
+
+    readonly static Dictionary<EarthEllipsoid, EcefGeodeticCoordConverter> _convertersCache = [];
+
+    #endregion Private Fields
+
+    #region Private Constructors
+
+    EcefGeodeticCoordConverter(EarthEllipsoid ellipsoid)
+    {
+        Ellipsoid = ellipsoid;
+    }
+
+    #endregion Private Constructors
 }

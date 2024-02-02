@@ -33,25 +33,23 @@ public class EarthEllipsoid(double A, double B)
     public double B { get; init; } = B;
 
     /// <summary>
-    /// Gets the first eccentricity squared of the ellipsoid
-    /// </summary>
-    public double E12 => 1 - Pow(B / A, 2);
-
-    /// <summary>
     /// Gets the first eccentricity of the ellipsoid
     /// </summary>
     public double E1 => Sqrt(E12);
 
     /// <summary>
-    /// Gets the second eccentricity squared of the ellipsoid
+    /// Gets the first eccentricity squared of the ellipsoid
     /// </summary>
-    public double E22 => Pow(A / B, 2) - 1;
-
+    public double E12 => 1 - Pow(B / A, 2);
     /// <summary>
     /// Gets the second eccentricity of the ellipsoid
     /// </summary>
     public double E2 => Sqrt(E22);
 
+    /// <summary>
+    /// Gets the second eccentricity squared of the ellipsoid
+    /// </summary>
+    public double E22 => Pow(A / B, 2) - 1;
     /// <summary>
     /// Gets the flattening of the ellipse
     /// </summary>    

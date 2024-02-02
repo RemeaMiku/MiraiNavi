@@ -37,10 +37,13 @@ public readonly struct Angle :
     public const double RadiansPerSecond = Pi / 180 / 3600;
     public const double SecondsPerRadian = 180 / Pi * 3600;
 
-    public readonly static Angle NotAvailable = new(NaN);
     public readonly static Angle MaxValue = new(double.MaxValue);
+
     public readonly static Angle MinValue = new(double.MinValue);
+
     public readonly static Angle NegativeInfinity = new(double.NegativeInfinity);
+
+    public readonly static Angle NotAvailable = new(NaN);
     public readonly static Angle PositiveInfinity = new(double.PositiveInfinity);
     public readonly static Angle RightAngle = new(OneHalfOfPI);
     public readonly static Angle RoundAngle = new(DoublePI);
@@ -49,7 +52,11 @@ public readonly struct Angle :
 
     #endregion Public Fields
 
+    #region Private Constructors
+
     Angle(double radians) => Radians = radians;
+
+    #endregion Private Constructors
 
     #region Public Constructors
 
@@ -119,14 +126,11 @@ public readonly struct Angle :
 
     public static double Csc(double radians) => 1 / double.Sin(radians);
 
+    public static double DegreesToRadians(double degrees) => degrees * RadiansPerDegree;
+
     public static Angle FromDegrees(double degrees) => new(degrees * RadiansPerDegree);
 
     public static Angle FromRadians(double radians) => new(radians);
-
-    public static double DegreesToRadians(double degrees) => degrees * RadiansPerDegree;
-
-    public static double RadiansToDegrees(double radians) => radians * DegreesPerRadian;
-
     public static Angle Max(Angle left, Angle right) => new(double.Max(left.Radians, right.Radians));
 
     public static Angle Min(Angle left, Angle right) => new(double.Min(left.Radians, right.Radians));
@@ -163,6 +167,7 @@ public readonly struct Angle :
 
     public static Angle Parse(ReadOnlySpan<byte> utf8Text, IFormatProvider? provider) => FromDegrees(double.Parse(utf8Text, provider));
 
+    public static double RadiansToDegrees(double radians) => radians * DegreesPerRadian;
     public static double Sec(Angle angle) => 1 / Cos(angle);
 
     public static double Sec(double radians) => 1 / double.Cos(radians);

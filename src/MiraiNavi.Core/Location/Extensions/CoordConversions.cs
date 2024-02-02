@@ -1,10 +1,11 @@
 ﻿using MiraiNavi.Location.Contracts;
-using MiraiNavi.Location.Converters;
 
 namespace MiraiNavi.Location;
 
 public static class CoordConversions
 {
+    #region Public Methods
+
     public static TCartesian ToCartesian<TGeodetic, TCartesian>(this TGeodetic geodetic, ICartesianGeodeticCoordConverter<TCartesian, TGeodetic> converter)
         where TCartesian : ICartesianCoord3<TCartesian>
         where TGeodetic : IGeodeticCoord<TGeodetic>
@@ -28,4 +29,6 @@ public static class CoordConversions
         where TCartesian : ICartesianCoord2<TCartesian>
         where TLatLon : ILatLon<TLatLon>
         => converter.FromCartesionToLatLng(cartesian);
+
+    #endregion Public Methods
 }

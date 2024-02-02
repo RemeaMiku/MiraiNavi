@@ -12,7 +12,11 @@ public interface ICartesianCoord2<TSelf> :
     IUnaryNegationOperators<TSelf, TSelf>
     where TSelf : ICartesianCoord2<TSelf>
 {
+    #region Public Properties
+
     double X { get; set; }
 
     double Y { get; set; }
+
+    #endregion Public Properties
 }

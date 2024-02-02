@@ -1,6 +1,5 @@
 ﻿using MiraiNavi;
 using MiraiNavi.Location;
-using MiraiNavi.Location.Converters;
 using MiraiNavi.Location.Coordinates;
 using MiraiNavi.Time;
 
@@ -11,7 +10,6 @@ WriteAngle(angle.Map(Angle.Ranges.NegativeStraightToStraight));
 var a = new GeodeticCoord(Angle.RightAngle / 2, Angle.Parse("90"), 32031);
 var b = a.ToEcef(EarthEllipsoid.Wgs84);
 var c = b.ToGeodetic(EarthEllipsoid.Wgs84);
-var d = CoordConversions.ToEcef(c, EarthEllipsoid.Wgs84);
 var e = LatLon.Parse("30,114", default);
 var projection = new GaussKrugerProjection(EarthEllipsoid.Wgs84, Angle.Parse("120"));
 var f = e.ToCartesian(projection);

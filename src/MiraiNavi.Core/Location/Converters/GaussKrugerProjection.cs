@@ -3,29 +3,11 @@ using MiraiNavi.Location.Coordinates;
 using static MiraiNavi.Angle;
 using static System.Double;
 
-namespace MiraiNavi.Location.Converters;
+namespace MiraiNavi.Location;
 
 public sealed class GaussKrugerProjection : ICartesianLatLonConverter<CartesianCoord2, LatLon>
 {
-    double _a;
-    double _b;
-    double _c;
-    double _d;
-    double _e;
-
-    void SetValues()
-    {
-        var e2 = Ellipsoid.E12;
-        var e4 = e2 * e2;
-        var e6 = e4 * e2;
-        var e8 = e6 * e2;
-        var e10 = e8 * e2;
-        _a = 1 + 3 / 4.0 * e2 + 45 / 64.0 * e4 + 175 / 256.0 * e6 + 11025 / 16384.0 * e8 + 43659 / 65536.0 * e10;
-        _b = 3 / 4.0 * e2 + 15 / 16.0 * e4 + 525 / 512.0 * e6 + 2205 / 2048.0 * e8 + 72765 / 65536.0 * e10;
-        _c = 15 / 64.0 * e4 + 105 / 256.0 * e6 + 2205 / 4096.0 * e8 + 10395 / 16384.0 * e10;
-        _d = 35 / 512.0 * e6 + 315 / 2048.0 * e8 + 31185 / 131072.0 * e10;
-        _e = 315 / 16384.0 * e8 + 3645 / 65536.0 * e10;
-    }
+    #region Public Constructors
 
     public GaussKrugerProjection(EarthEllipsoid ellipsoid, Angle centralLongitude)
     {
@@ -34,11 +16,17 @@ public sealed class GaussKrugerProjection : ICartesianLatLonConverter<CartesianC
         SetValues();
     }
 
-    public EarthEllipsoid Ellipsoid { get; }
+    #endregion Public Constructors
+
+    #region Public Properties
 
     public Angle CentralLongitude { get; set; }
 
-    const double _iterationThereshold = RadiansPerSecond * 0.001;
+    public EarthEllipsoid Ellipsoid { get; }
+
+    #endregion Public Properties
+
+    #region Public Methods
 
     public LatLon FromCartesionToLatLng(CartesianCoord2 cartesianCoord)
     {
@@ -77,4 +65,36 @@ public sealed class GaussKrugerProjection : ICartesianLatLonConverter<CartesianC
         var y = N * cosB * dL + N / 6 * Pow(cosB, 3) * (1 - tanB * tanB + eta2) * Pow(dL, 3) + N / 120 * Pow(cosB, 5) * (5 - 18 * tanB * tanB + Pow(tanB, 4) + 14 * eta2 - 58 * eta2 * tanB * tanB) * Pow(dL, 5);
         return new(x, y);
     }
+
+    #endregion Public Methods
+
+    #region Private Fields
+
+    const double _iterationThereshold = RadiansPerSecond * 0.001;
+
+    double _a;
+    double _b;
+    double _c;
+    double _d;
+    double _e;
+
+    #endregion Private Fields
+
+    #region Private Methods
+
+    void SetValues()
+    {
+        var e2 = Ellipsoid.E12;
+        var e4 = e2 * e2;
+        var e6 = e4 * e2;
+        var e8 = e6 * e2;
+        var e10 = e8 * e2;
+        _a = 1 + 3 / 4.0 * e2 + 45 / 64.0 * e4 + 175 / 256.0 * e6 + 11025 / 16384.0 * e8 + 43659 / 65536.0 * e10;
+        _b = 3 / 4.0 * e2 + 15 / 16.0 * e4 + 525 / 512.0 * e6 + 2205 / 2048.0 * e8 + 72765 / 65536.0 * e10;
+        _c = 15 / 64.0 * e4 + 105 / 256.0 * e6 + 2205 / 4096.0 * e8 + 10395 / 16384.0 * e10;
+        _d = 35 / 512.0 * e6 + 315 / 2048.0 * e8 + 31185 / 131072.0 * e10;
+        _e = 315 / 16384.0 * e8 + 3645 / 65536.0 * e10;
+    }
+
+    #endregion Private Methods
 }

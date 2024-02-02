@@ -9,5 +9,9 @@ public interface ICoord<TSelf> :
     IParsable<TSelf>
     where TSelf : ICoord<TSelf>
 {
+    #region Public Properties
+
     abstract static TSelf Origin { get; }
+
+    #endregion Public Properties
 }

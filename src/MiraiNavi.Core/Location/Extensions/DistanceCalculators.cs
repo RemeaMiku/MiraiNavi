@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using MiraiNavi.Location.Contracts;
+﻿using MiraiNavi.Location.Contracts;
 using static System.Double;
 using static MiraiNavi.Angle;
 
@@ -7,6 +6,8 @@ namespace MiraiNavi.Location;
 
 public static class DistanceCalculators
 {
+    #region Public Methods
+
     public static double CalculateDistance<TSelf>(this ICartesianCoord2<TSelf> start, ICartesianCoord2<TSelf> end) where TSelf : struct, ICartesianCoord2<TSelf>
     {
         var dx = end.X - start.X;
@@ -40,4 +41,6 @@ public static class DistanceCalculators
         var radius = (2 * e.A + e.B) / 3;
         return centralAngleRads * radius;
     }
+
+    #endregion Public Methods
 }
