@@ -1,4 +1,8 @@
-﻿using MiraiNavi;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.Json;
+using MiraiNavi;
 using MiraiNavi.Location;
 using MiraiNavi.Location.Coordinates;
 using MiraiNavi.Time;

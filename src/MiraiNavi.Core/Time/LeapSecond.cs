@@ -4,7 +4,13 @@ public static class LeapSecond
 {
     #region Public Methods
 
-    public static int GetLeapSecondCount(DateTimeOffset date) => _leapSecondDates.Count(d => d <= date);
+    #region Extensions
+
+    public static int GetLeapSecondCount(this DateTimeOffset dateTimeOffset) => _leapSecondDates.Count(d => d <= dateTimeOffset);
+
+    public static TimeSpan GetLeapSecondOffset(this DateTimeOffset dateTimeOffset) => TimeSpan.FromSeconds(GetLeapSecondCount(dateTimeOffset));
+
+    #endregion
 
     public static DateTimeOffset GetLeapSecondDate(int count)
     {
@@ -12,8 +18,6 @@ public static class LeapSecond
         ArgumentOutOfRangeException.ThrowIfGreaterThan(count, _leapSecondDates.Length, nameof(count));
         return _leapSecondDates[count - 1];
     }
-
-    public static TimeSpan GetLeapSecondOffset(DateTimeOffset date) => TimeSpan.FromSeconds(GetLeapSecondCount(date));
 
     #endregion Public Methods
 
