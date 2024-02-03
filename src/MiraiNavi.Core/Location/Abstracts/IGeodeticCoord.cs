@@ -1,4 +1,4 @@
-﻿namespace MiraiNavi.Location.Contracts;
+﻿namespace MiraiNavi.Location.Abstracts;
 
 public interface IGeodeticCoord<TSelf> : ILatLon<TSelf> where TSelf : IGeodeticCoord<TSelf>
 {

@@ -1,10 +1,10 @@
-﻿using MiraiNavi.Location.Contracts;
+﻿using MiraiNavi.Location.Abstracts;
 using static System.Double;
 using static MiraiNavi.Angle;
 
 namespace MiraiNavi.Location;
 
-public static class Distance
+static partial class CoordExtensions
 {
     #region Public Methods
 

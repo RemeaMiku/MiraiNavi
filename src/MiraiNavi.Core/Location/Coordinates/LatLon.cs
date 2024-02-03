@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using MiraiNavi.Location.Contracts;
+using MiraiNavi.Location.Abstracts;
 
-namespace MiraiNavi.Location.Coordinates;
+namespace MiraiNavi.Location;
 
 public record struct LatLon : ILatLon<LatLon>
 {

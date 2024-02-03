@@ -1,4 +1,4 @@
-﻿namespace MiraiNavi.Location.Contracts;
+﻿namespace MiraiNavi.Location.Abstracts;
 
 public interface ICartesianLatLonConverter<TCartesian, TLatLon>
     where TCartesian : ICartesianCoord2<TCartesian>
@@ -6,9 +6,9 @@ public interface ICartesianLatLonConverter<TCartesian, TLatLon>
 {
     #region Public Methods
 
-    TLatLon FromCartesionToLatLng(TCartesian cartesian);
+    TLatLon CartesionToLatLng(TCartesian cartesian);
 
-    TCartesian FromLatLngToCartesian(TLatLon latlon);
+    TCartesian LatLngToCartesian(TLatLon latlon);
 
     #endregion Public Methods
 }

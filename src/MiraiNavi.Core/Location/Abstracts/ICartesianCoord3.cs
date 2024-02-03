@@ -1,4 +1,4 @@
-﻿namespace MiraiNavi.Location.Contracts;
+﻿namespace MiraiNavi.Location.Abstracts;
 
 public interface ICartesianCoord3<TSelf> : ICartesianCoord2<TSelf> where TSelf : ICartesianCoord3<TSelf>
 {

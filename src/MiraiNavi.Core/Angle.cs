@@ -3,6 +3,7 @@ using System.Numerics;
 using System.Text.Json.Serialization;
 using MiraiNavi.Serialization;
 using static System.Double;
+using static MiraiNavi.UnitConverters;
 
 namespace MiraiNavi;
 
@@ -28,25 +29,13 @@ public readonly struct Angle :
 
     #region Public Fields
 
-    public const double DegreesPerRadian = 180 / Pi;
-    public const double DoublePI = 2 * Pi;
-    public const double MinutesPerRadian = 180 / Pi * 60;
-    public const double OneHalfOfPI = Pi / 2;
-    public const double RadiansPerDegree = Pi / 180;
-    public const double RadiansPerMinute = Pi / 180 / 60;
-    public const double RadiansPerSecond = Pi / 180 / 3600;
-    public const double SecondsPerRadian = 180 / Pi * 3600;
-
     public readonly static Angle MaxValue = new(double.MaxValue);
-
     public readonly static Angle MinValue = new(double.MinValue);
-
     public readonly static Angle NegativeInfinity = new(double.NegativeInfinity);
-
     public readonly static Angle NotAvailable = new(NaN);
     public readonly static Angle PositiveInfinity = new(double.PositiveInfinity);
-    public readonly static Angle RightAngle = new(OneHalfOfPI);
-    public readonly static Angle RoundAngle = new(DoublePI);
+    public readonly static Angle RightAngle = new(HalfPI);
+    public readonly static Angle RoundAngle = new(TwoPi);
     public readonly static Angle StraightAngle = new(Pi);
     public readonly static Angle Zero = new(0);
 
@@ -118,7 +107,7 @@ public readonly struct Angle :
 
     public static double Cosh(Angle angle) => double.Cosh(angle.Radians);
 
-    public static double Cot(Angle angle) => double.Tan(OneHalfOfPI - angle.Radians);
+    public static double Cot(Angle angle) => double.Tan(HalfPI - angle.Radians);
 
     public static double Cot(double radians) => double.Tan(Pi / 2 - radians);
 
@@ -251,7 +240,7 @@ public readonly struct Angle :
 
     public Angle Map(Ranges range)
     {
-        var angle = new Angle(Radians % DoublePI);
+        var angle = new Angle(Radians % TwoPi);
         if(angle < Zero)
             angle += RoundAngle;
         if(range == Ranges.NegativeStraightToStraight && angle > StraightAngle)

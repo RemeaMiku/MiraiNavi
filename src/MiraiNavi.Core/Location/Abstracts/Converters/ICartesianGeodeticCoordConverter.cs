@@ -1,4 +1,4 @@
-﻿namespace MiraiNavi.Location.Contracts;
+﻿namespace MiraiNavi.Location.Abstracts;
 
 public interface ICartesianGeodeticCoordConverter<TCartesian, TGeodetic>
     where TCartesian : ICartesianCoord3<TCartesian>
@@ -6,9 +6,9 @@ public interface ICartesianGeodeticCoordConverter<TCartesian, TGeodetic>
 {
     #region Public Methods
 
-    TGeodetic FromCartesionToGeodetic(TCartesian cartesianCoord);
+    TGeodetic CartesionToGeodetic(TCartesian cartesian);
 
-    TCartesian FromGeodeticToCartesian(TGeodetic geodeticCoord);
+    TCartesian GeodeticToCartesian(TGeodetic geodetic);
 
     #endregion Public Methods
 }

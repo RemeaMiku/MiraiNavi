@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using MiraiNavi.Location.Contracts;
-using MiraiNavi.Location.Coordinates;
+using MiraiNavi.Location.Abstracts;
 
 namespace MiraiNavi.Location;
 

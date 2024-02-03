@@ -2,15 +2,9 @@
 
 public static class LeapSecond
 {
-    #region Public Methods
+    #region Public Methods   
 
-    #region Extensions
-
-    public static int GetLeapSecondCount(this DateTimeOffset dateTimeOffset) => _leapSecondDates.Count(d => d <= dateTimeOffset);
-
-    public static TimeSpan GetLeapSecondOffset(this DateTimeOffset dateTimeOffset) => TimeSpan.FromSeconds(GetLeapSecondCount(dateTimeOffset));
-
-    #endregion
+    public static int GetLeapSecondCount(DateTimeOffset dateTimeOffset) => _leapSecondDates.Count(d => d <= dateTimeOffset);
 
     public static DateTimeOffset GetLeapSecondDate(int count)
     {

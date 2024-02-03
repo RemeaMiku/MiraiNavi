@@ -1,68 +1,77 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
+using static System.Math;
+using static MiraiNavi.UnitConverters;
 using static System.TimeSpan;
 
 namespace MiraiNavi.Time;
 
 public readonly record struct GpsTime :
-    IAdditionOperators<GpsTime, TimeSpan, GpsTime>,
+    IAdditionOperators<GpsTime, double, GpsTime>,
     IComparisonOperators<GpsTime, GpsTime, bool>,
     IComparable<GpsTime>,
     IEquatable<GpsTime>,
     IEqualityOperators<GpsTime, GpsTime, bool>,
     IFormattable,
     IParsable<GpsTime>,
-    ISubtractionOperators<GpsTime, GpsTime, TimeSpan>,
-    ISubtractionOperators<GpsTime, TimeSpan, GpsTime>,
+    ISubtractionOperators<GpsTime, GpsTime, double>,
+    ISubtractionOperators<GpsTime, double, GpsTime>,
     IUnaryPlusOperators<GpsTime, GpsTime>
 {
+    const double _maxTotalSeconds = int.MaxValue * SecondsPerWeek + SecondsPerWeek - double.Epsilon;
+
     public GpsTime(double totalSeconds)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(totalSeconds, 0, nameof(totalSeconds));
-        DurationSinceStartDate = FromSeconds(totalSeconds);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(totalSeconds, _maxTotalSeconds, nameof(totalSeconds));
+        Week = (int)Floor(totalSeconds / SecondsPerWeek);
+        Sow = totalSeconds - WeeksToSeconds(Week);
     }
 
     public GpsTime(int week, double secondsOfWeek)
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(week, 0, nameof(week));
         ArgumentOutOfRangeException.ThrowIfLessThan(secondsOfWeek, 0, nameof(secondsOfWeek));
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(secondsOfWeek, Constants.SecondsPerWeek, nameof(secondsOfWeek));
-        DurationSinceStartDate = FromSeconds(week * Constants.SecondsPerWeek + secondsOfWeek);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(secondsOfWeek, SecondsPerWeek, nameof(secondsOfWeek));
+        Week = week;
+        Sow = secondsOfWeek;
     }
 
-    public GpsTime(TimeSpan durationSinceStartDate)
-    {
-        ArgumentOutOfRangeException.ThrowIfLessThan(durationSinceStartDate, Zero, nameof(durationSinceStartDate));
-        DurationSinceStartDate = durationSinceStartDate;
-    }
+    public int Week { get; }
 
-    public int Week => DurationSinceStartDate.Days / 7;
+    public double Sow { get; }
 
-    public double Sow => DurationSinceStartDate.TotalSeconds % Constants.SecondsPerWeek;
+    public double TotalSeconds => WeeksToSeconds(Week) + Sow;
 
-    public TimeSpan DurationSinceStartDate { get; }
-
-    public double TotalSeconds => DurationSinceStartDate.TotalSeconds;
-
-    public static GpsTime operator +(GpsTime left, TimeSpan right) => new(left.DurationSinceStartDate + right);
+    public static GpsTime operator +(GpsTime left, double right) => new(left.TotalSeconds + right);
 
     public static GpsTime Now => DateTimeOffset.UtcNow.ToGpsTime();
 
-    public static bool operator >(GpsTime left, GpsTime right) => left.DurationSinceStartDate > right.DurationSinceStartDate;
+    public static bool operator >(GpsTime left, GpsTime right) =>
+        left.Week > right.Week || left.Week >= right.Week && left.Sow > right.Sow;
 
-    public static bool operator >=(GpsTime left, GpsTime right) => left.DurationSinceStartDate >= right.DurationSinceStartDate;
+    public static bool operator >=(GpsTime left, GpsTime right) =>
+        left.Week > right.Week || (left.Week >= right.Week && left.Sow >= right.Sow);
 
-    public static bool operator <(GpsTime left, GpsTime right) => left.DurationSinceStartDate < right.DurationSinceStartDate;
 
-    public static bool operator <=(GpsTime left, GpsTime right) => left.DurationSinceStartDate <= right.DurationSinceStartDate;
+    public static bool operator <(GpsTime left, GpsTime right) =>
+        left.Week < right.Week || left.Week <= right.Week && left.Sow < right.Sow;
 
-    public static TimeSpan operator -(GpsTime left, GpsTime right) => left.DurationSinceStartDate - right.DurationSinceStartDate;
+
+    public static bool operator <=(GpsTime left, GpsTime right) =>
+        left.Week < right.Week || (left.Week <= right.Week && left.Sow <= right.Sow);
+
+    public static double operator -(GpsTime left, GpsTime right) => WeeksToSeconds(left.Week - right.Week) + left.Sow - right.Sow;
 
     public static GpsTime operator +(GpsTime value) => value;
 
-    public static GpsTime operator -(GpsTime left, TimeSpan offset) => new(left.DurationSinceStartDate - offset);
+    public static GpsTime operator -(GpsTime left, double right) => new(left.TotalSeconds - right);
 
-    public int CompareTo(GpsTime other) => DurationSinceStartDate.CompareTo(other.DurationSinceStartDate);
+    public int CompareTo(GpsTime other)
+    {
+        var weekComparison = Week.CompareTo(other.Week);
+        return weekComparison is not 0 ? weekComparison : Sow.CompareTo(other.Sow);
+    }
 
     public static GpsTime Parse(string s, IFormatProvider? provider)
     {
@@ -84,7 +93,7 @@ public readonly record struct GpsTime :
             return false;
         if(!int.TryParse(values[0], provider, out var week) || week < 0)
             return false;
-        if(!double.TryParse(values[1], provider, out var sow) || sow < 0 || sow > Constants.SecondsPerWeek)
+        if(!double.TryParse(values[1], provider, out var sow) || sow < 0 || sow > SecondsPerWeek)
             return false;
         result = new(week, sow);
         return true;
@@ -99,4 +108,16 @@ public readonly record struct GpsTime :
     }
 
     public static readonly DateTimeOffset StartDate = new(1980, 1, 6, 0, 0, 0, Zero);
+
+    internal const int _startDateLeapSecondCount = 9;
+
+    public static GpsTime FromDateTimeOffset(DateTimeOffset dateTimeOffset) =>
+        new((dateTimeOffset - StartDate).TotalSeconds + LeapSecond.GetLeapSecondCount(dateTimeOffset) - _startDateLeapSecondCount);
+
+    public DateTimeOffset ToDateTimeOffset()
+    {
+        var @this = this;
+        var leapSecond = LeapSecond._leapSecondDates.Count(d => FromDateTimeOffset(d) <= @this);
+        return StartDate + FromSeconds(TotalSeconds - leapSecond + _startDateLeapSecondCount);
+    }
 }

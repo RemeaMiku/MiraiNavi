@@ -1,9 +1,9 @@
-﻿using MiraiNavi.Location.Contracts;
+﻿using MiraiNavi.Location.Abstracts;
 using static System.Double;
 
 namespace MiraiNavi.Location;
 
-public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverter<EcefCoord, GeodeticCoord>
+public sealed partial class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverter<EcefCoord, GeodeticCoord>
 {
     #region Public Properties
 
@@ -27,7 +27,7 @@ public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverte
         return converter;
     }
 
-    public static (double B, double L, double H) FromEcefToGeodetic(double x, double y, double z, double a, double b)
+    public static (double B, double L, double H) EcefToGeodetic(double x, double y, double z, double a, double b)
     {
         var L = Atan2(y, x);
         var r = Sqrt(x * x + y * y);
@@ -53,7 +53,7 @@ public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverte
         return (B, L, h);
     }
 
-    public static (double X, double Y, double Z) FromGeodeticToEcef(double B, double L, double h, double a, double b)
+    public static (double X, double Y, double Z) GeodeticToEcef(double B, double L, double h, double a, double b)
     {
         var sinB = Sin(B);
         var cosB = Cos(B);
@@ -71,15 +71,15 @@ public sealed class EcefGeodeticCoordConverter : ICartesianGeodeticCoordConverte
         return (x, y, z);
     }
 
-    public GeodeticCoord FromCartesionToGeodetic(EcefCoord ecef)
+    public GeodeticCoord CartesionToGeodetic(EcefCoord ecef)
     {
-        var (b, l, h) = FromEcefToGeodetic(ecef.X, ecef.Y, ecef.Z, Ellipsoid.A, Ellipsoid.B);
+        var (b, l, h) = EcefToGeodetic(ecef.X, ecef.Y, ecef.Z, Ellipsoid.A, Ellipsoid.B);
         return new(Angle.FromRadians(b), Angle.FromRadians(l), h);
     }
 
-    public EcefCoord FromGeodeticToCartesian(GeodeticCoord geodetic)
+    public EcefCoord GeodeticToCartesian(GeodeticCoord geodetic)
     {
-        var (x, y, z) = FromGeodeticToEcef(geodetic.B, geodetic.L, geodetic.H, Ellipsoid.A, Ellipsoid.B);
+        var (x, y, z) = GeodeticToEcef(geodetic.B, geodetic.L, geodetic.H, Ellipsoid.A, Ellipsoid.B);
         return new(x, y, z);
     }
 

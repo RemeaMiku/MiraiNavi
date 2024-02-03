@@ -1,10 +1,5 @@
-﻿using System.ComponentModel;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text.Json;
-using MiraiNavi;
+﻿using MiraiNavi;
 using MiraiNavi.Location;
-using MiraiNavi.Location.Coordinates;
 using MiraiNavi.Time;
 
 var angle = new Angle(436, 39, 4.792131235);
@@ -21,6 +16,7 @@ var g = f.ToLatLon(projection);
 Console.WriteLine(e);
 Console.WriteLine(f);
 Console.WriteLine(g);
+double.RadiansToDegrees(1.0);
 var duration = DateTime.Today - new DateTime(1980, 1, 6, 0, 0, 0);
 Console.WriteLine(duration.TotalSeconds);
 

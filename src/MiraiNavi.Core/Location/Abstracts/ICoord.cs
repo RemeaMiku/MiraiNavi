@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace MiraiNavi.Location.Contracts;
+namespace MiraiNavi.Location.Abstracts;
 
 public interface ICoord<TSelf> :
     IEquatable<TSelf>,

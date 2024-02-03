@@ -1,5 +1,4 @@
-﻿using MiraiNavi.Location.Contracts;
-using MiraiNavi.Location.Coordinates;
+﻿using MiraiNavi.Location.Abstracts;
 using static MiraiNavi.Angle;
 using static System.Double;
 
@@ -28,7 +27,7 @@ public sealed class GaussKrugerProjection : ICartesianLatLonConverter<CartesianC
 
     #region Public Methods
 
-    public LatLon FromCartesionToLatLng(CartesianCoord2 cartesianCoord)
+    public LatLon CartesionToLatLng(CartesianCoord2 cartesianCoord)
     {
         var (x, y) = cartesianCoord;
         var e2_1 = Ellipsoid.E12;
@@ -49,7 +48,7 @@ public sealed class GaussKrugerProjection : ICartesianLatLonConverter<CartesianC
         return new(FromRadians(B), FromRadians(dL) + CentralLongitude);
     }
 
-    public CartesianCoord2 FromLatLngToCartesian(LatLon latlon)
+    public CartesianCoord2 LatLngToCartesian(LatLon latlon)
     {
         var (latitude, longitude) = latlon;
         var B = latitude.Radians;
@@ -70,7 +69,7 @@ public sealed class GaussKrugerProjection : ICartesianLatLonConverter<CartesianC
 
     #region Private Fields
 
-    const double _iterationThereshold = RadiansPerSecond * 0.001;
+    const double _iterationThereshold = 1E-6;
 
     double _a;
     double _b;

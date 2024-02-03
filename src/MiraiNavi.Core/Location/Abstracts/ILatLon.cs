@@ -1,4 +1,4 @@
-﻿namespace MiraiNavi.Location.Contracts;
+﻿namespace MiraiNavi.Location.Abstracts;
 
 public interface ILatLon<TSelf> : ICoord<TSelf> where TSelf : ILatLon<TSelf>
 {
